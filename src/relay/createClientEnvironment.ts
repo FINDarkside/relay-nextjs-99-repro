@@ -1,4 +1,5 @@
 // lib/client_environment.ts
+import { hydrateRelayEnvironment } from 'relay-nextjs';
 import { Environment, Network, Store, RecordSource } from 'relay-runtime';
 
 export function createClientNetwork() {
@@ -31,6 +32,7 @@ export function getClientEnvironment() {
       isServer: false,
     });
   }
+  hydrateRelayEnvironment(clientEnv);
 
   return clientEnv;
 }

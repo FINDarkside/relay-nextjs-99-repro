@@ -1,14 +1,22 @@
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { RelayEnvironmentProvider } from 'react-relay/hooks';
-import { useRelayNextjs } from 'relay-nextjs/app';
+import {
+  getInitialPreloadedQuery,
+  getRelayProps,
+} from 'relay-nextjs/app';
 import { getClientEnvironment } from '../relay/createClientEnvironment';
 
+const clientEnv = getClientEnvironment();
+const initialPreloadedQuery = getInitialPreloadedQuery({
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  createClientEnvironment: () => getClientEnvironment()!,
+});
+
 function App({ Component, pageProps }: AppProps) {
-  const { env, ...relayProps } = useRelayNextjs(pageProps, {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    createClientEnvironment: () => getClientEnvironment()!,
-  });
+  const relayProps = getRelayProps(pageProps, initialPreloadedQuery);
+  const env = relayProps.preloadedQuery?.environment ?? clientEnv!;
+
   return (
     <>
       <RelayEnvironmentProvider environment={env}>
